@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790532031420,
+      "tag": "0000_clean_black_widow",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790532744064,
+      "tag": "0001_shiny_tony_stark",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790693426325,
+      "tag": "0002_deep_agent_zero",
+      "breakpoints": true
+    }
+  ]
+}

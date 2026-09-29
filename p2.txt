@@ -1,0 +1,143 @@
+Continue the existing EVE Healthcare backend project. Do not recreate the project or modify unrelated files.
+
+CURRENT STACK:
+- Node.js with Express
+- JavaScript using CommonJS
+- PostgreSQL
+- Drizzle ORM
+- Zod validation
+- bcryptjs
+- jsonwebtoken
+- Jest and Supertest
+
+The project already has:
+- Database connection and Drizzle schema
+- Users, centres, tests, bookings, and payments tables
+- Migrations and seed script
+- Centralized error handling
+- Existing tests passing
+- Server running on port 5000
+
+PHASE 3 GOAL:
+Implement user signup, login, and JWT authentication only.
+
+Before coding:
+1. Inspect the existing project structure and relevant files.
+2. Read the existing users table schema, environment configuration, app setup, routes, and error handling.
+3. Reuse the current conventions and dependencies.
+4. Do not assume column names. Use the actual schema.
+5. Do not expose or print secrets from .env.
+
+REQUIREMENTS:
+
+A. Signup
+Implement:
+POST /api/auth/signup
+
+Accept:
+{
+  "name": "User Name",
+  "email": "user@example.com",
+  "password": "StrongPassword123"
+}
+
+Requirements:
+- Validate request body using Zod.
+- Trim name and email where appropriate.
+- Validate email format.
+- Apply a reasonable password length requirement.
+- Check whether the email already exists.
+- Hash the password using bcryptjs before storing it.
+- Never store or return a plaintext password.
+- Return an appropriate success status and safe user data.
+- Handle duplicate email without exposing database internals.
+
+B. Login
+Implement:
+POST /api/auth/login
+
+Accept:
+{
+  "email": "user@example.com",
+  "password": "StrongPassword123"
+}
+
+Requirements:
+- Validate request body.
+- Find the user by email.
+- Compare password using bcryptjs.
+- Return a generic invalid-credentials error for an incorrect email or password.
+- Generate a JWT using jsonwebtoken.
+- Use JWT_SECRET and JWT_EXPIRES_IN from the existing environment configuration if available.
+- Do not hardcode secrets.
+- Return the token and safe user details.
+- Never return password_hash.
+
+C. JWT Authentication Middleware
+Create or update the authentication middleware.
+
+Requirements:
+- Read the token from the Authorization header in the format:
+  Bearer <token>
+- Verify the token using the configured JWT secret.
+- Reject missing, malformed, expired, or invalid tokens with suitable 401 responses.
+- Attach the authenticated user's safe identity to req.user.
+- Do not trust user IDs sent in request bodies for authentication.
+- Keep the middleware reusable for future protected routes.
+
+D. Current User Endpoint
+Implement:
+GET /api/auth/me
+
+Requirements:
+- Require a valid JWT.
+- Return the authenticated user's safe profile.
+- Do not return password_hash or other sensitive fields.
+
+E. Code Structure
+Follow the existing project architecture. Prefer:
+- auth routes
+- auth controller
+- auth service
+- auth validation
+- reusable auth middleware
+
+Do not duplicate database connection logic.
+Use the existing Drizzle database instance and existing error-handling conventions.
+Keep app.js importable without starting the server.
+
+F. Tests
+Add Jest/Supertest tests for:
+- Successful signup
+- Invalid signup input
+- Duplicate email
+- Successful login
+- Incorrect password
+- Missing token
+- Invalid token
+- Expired token if practical
+- Successful /api/auth/me
+- Confirm password_hash is never returned
+
+Mock database operations where appropriate so tests do not require a live PostgreSQL database.
+Do not weaken or delete existing tests.
+Do not claim tests pass unless you actually run them.
+
+G. Documentation
+Update README with:
+- Signup endpoint
+- Login endpoint
+- Current-user endpoint
+- Example request and response
+- How to pass the Bearer token
+- Authentication assumptions
+
+FINAL CHECK:
+1. Run the full test suite.
+2. Fix failures caused by this phase.
+3. Check that existing health endpoint still works.
+4. Summarize files changed and commands run.
+5. Clearly report any remaining manual steps.
+
+Do not implement diagnostic centres, bookings, payments, or webhook APIs in this phase.
+Do not add unnecessary dependencies.
